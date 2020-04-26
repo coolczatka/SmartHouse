@@ -30,11 +30,20 @@ class DeviceDTO implements JsonSerializable{
     public function getIsWorking(){
         return $this->is_working;
     }
+    public function setIsWorking(int $is_working){
+        $this->is_working = $is_working;
+    }
     public function getSettings(){
         return $this->settings;
     }
+    public function setSettings(array $settings){
+        $this->settings = $settings;
+    }
     public function getSettingsJson(){
         return json_encode($this->settings);
+    }
+    public function setSettingsJson(string $settings){
+        $this->settings = json_decode($settings, true);
     }
     public function jsonSerialize(){
         return [

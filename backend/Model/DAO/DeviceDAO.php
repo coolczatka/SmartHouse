@@ -3,14 +3,15 @@
 namespace App\Model\DAO;
 
 use App\Model\DTO\DeviceDTO;
+use Model\Db;
 
 class DeviceDAO{
     protected $pdo;
     const TABLE_NAME = 'devices';
 
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->pdo = $pdo;
+        $this->pdo = Db::getPDOInstance();
     }
 
     /**
@@ -47,13 +48,21 @@ class DeviceDAO{
     }
 
     public function update(DeviceDTO $device):bool{
-        $query = "UPDATE {self::TABLE_NAME} SET name=':name', is_working=:is_working, settings=':settings') where id=:id";
+        $query = "UPDATE ".self::TABLE_NAME." SET name=':name', is_working=:is_working, settings=':settings') where id=:id";
         $stmt = $this->pdo->prepare($query);
         return $stmt->execute([
             ':id' => $device->getId(),
             ':name' => $device->getName(),
             ':is_working' => $device->getIsWorking(),
             ':settings' => $device->getSettingsJson()
+        ]);
+    }
+
+    public function delete(int $id){
+        $query = "DELETE FROM ".self::TABLE_NAME." where id=:id";
+        $stmt = $this->pdo->prepare($query);
+        return $stmt->execute([
+            ':id' => $id
         ]);
     }
 }
